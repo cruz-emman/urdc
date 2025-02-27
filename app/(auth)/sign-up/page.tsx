@@ -29,7 +29,7 @@ const SignUp = () => {
 
   async function onSubmit(values: SignUpSchemaType) {
     const { name, email, password } = values;
-    const { data, error } = await authClient.signUp.email({
+    const {  } = await authClient.signUp.email({
       email,
       password,
       name,

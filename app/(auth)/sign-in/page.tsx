@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod"
 
-import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,7 +23,7 @@ export default function SignIn() {
 
   async function onSubmit(values: SignInSchemaType) {
     const { email, password } = values;
-    const { data, error } = await authClient.signIn.email({
+    const { } = await authClient.signIn.email({
       email,
       password,
       callbackURL: "/dashboard",
