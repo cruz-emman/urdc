@@ -19,6 +19,7 @@ import {
 
 export default function Home() {
 
+  // Move to other file
   const formSchema = z.object({
     title: z.string().min(2),
     year_start: z.number().min(1990).max(2026),
@@ -27,7 +28,7 @@ export default function Home() {
   })
 
 
-    // 1. Define your form.
+    // Move to the other file
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -35,15 +36,16 @@ export default function Home() {
       },
     })
    
-    // 2. Define a submit handler.
+    // Test onSubmit Function
     function onSubmit(values: z.infer<typeof formSchema>) {
-      // Do something with the form values.
-      // ✅ This will be type-safe and validated.
+
       console.log(values)
     }
 
   return (
     <body className="flex flex-col justify-center bg-white">
+
+      {/* Top Part */}
       <div className="flex flex-col p-5 sm:p-7 h-[50vp] bg-gray-200">
         <Image
          src="/logo.png"
@@ -60,7 +62,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col p-10 h-screen bg-white items-center gap-3 ">
+      {/* Form */}
+      <div className="flex flex-col p-10 h-auto bg-white items-center gap-3 ">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[800px]">
             <Link href="/..." className="flex justify-end underline text-blue-600">Advance Search</Link>
@@ -150,11 +153,48 @@ export default function Home() {
         </Form>
       </div>
       
-      <div className="flex flex-col p-5 justify-center items-center">
-        <p>Test</p>
+      {/* Browse by Category (idk kung gagawin dynamic ito based sa categories na nakalagay sa db) */}
+
+      <div className="flex flex-col w-full justify-center items-center p-5 ml-15 mr-15">
+        <p className="font-bold text-2xl ">Browse by Category</p>
+
+        
+        <div className="flex flex-row flex-wrap max-w-[500px] justify-between">
+          
+          <div className="flex flex-col flex-1 ">
+                <div className='font-bold text-lg'>
+                  Cateogry Titles
+                </div>
+                <ul>
+                  <li>1</li>
+                  <li>2</li>
+                  <li>3</li>
+                </ul>
+          </div>
+
+          <div className="flex flex-col flex-1">
+                <div className='font-bold text-lg'>
+                  Cateogry Titles
+                </div>
+                <ul>
+                  <li>1</li>
+                  <li>2</li>
+                  <li>3</li>
+                </ul>
+          </div>
+
+          <div className="flex flex-col flex-1">
+                <div className='font-bold text-lg'>
+                  Cateogry Titles
+                </div>
+                <ul>
+                  <li>1</li>
+                  <li>2</li>
+                  <li>3</li>
+                </ul>
+          </div>
+        </div>
       </div>
-      
-      
     </body>
   );
 }
