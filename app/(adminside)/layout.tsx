@@ -5,17 +5,19 @@ function AdminLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
-}>){
-    return(
-      <main>
-        <SidebarProvider>
-            <AppSidebar />
-            <main>
-                <SidebarTrigger />
-                {children}
-            </main>
-        </SidebarProvider>
-      </main>
+}>) {
+    return (
+        <main className="w-full">
+            <SidebarProvider>
+                <AppSidebar />
+                <main className="w-full">
+                    <SidebarTrigger />
+                    <div className=" w-full mx-auto ">
+                        {children}
+                    </div>
+                </main>
+            </SidebarProvider>
+        </main>
     )
 }
 
