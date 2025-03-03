@@ -43,7 +43,7 @@ export default function Home() {
     }
 
   return (
-    <body className="flex flex-col justify-center bg-white">
+    <main className="flex flex-col justify-center bg-white">
 
       {/* Top Part */}
       <div className="flex flex-col p-5 sm:p-7 h-[50vp] bg-gray-200">
@@ -195,6 +195,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </body>
+    </main>
   );
 }

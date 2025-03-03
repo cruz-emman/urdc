@@ -46,8 +46,7 @@ const admindashboard = () => {
     }
 
   return (
-    <body>
-
+    <main>
         <div>admindashboard</div>
         {/* Form */}
         <div className="flex flex-col p-10 h-auto bg-white items-center gap-3 ">
@@ -73,7 +72,6 @@ const admindashboard = () => {
                     <Button type="submit">Submit</Button>
                 </div> 
                 </div>
-
                 
                 <div className="flex gap-6 flex-row w-full mt-1 flex-wrap">
                 <FormField
@@ -139,8 +137,7 @@ const admindashboard = () => {
             </form>
             </Form>
         </div>
-
-    </body>
+    </main>
 
   )
 }
