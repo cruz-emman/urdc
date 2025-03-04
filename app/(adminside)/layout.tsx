@@ -10,7 +10,7 @@ function AdminLayout({
     return (
         <main>
             <SidebarProvider>
-                <AppSidebar />
+                <AppSidebar type="admin" />
                 <main>
                     <SidebarTrigger />
                     {children}

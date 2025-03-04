@@ -1,5 +1,5 @@
-import {  Upload, Home, Search, Settings, LogOut } from "lucide-react"
- 
+import { Upload, Home, Search, Settings, LogOut, Book, icons } from "lucide-react"
+
 import {
   Sidebar,
   SidebarContent,
@@ -11,9 +11,9 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter
-  } from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar"
 
-  // Menu items.
+// Menu items.
 const items = [
   {
     title: "Home",
@@ -36,25 +36,60 @@ const items = [
     icon: Settings,
   },
 ]
-  
-  export function AppSidebar() {
-    return (
-      <Sidebar>
+
+const clientLinks = [
+  {
+    title: "Home",
+    url: "/Home",
+    icon: Home
+  },
+  {
+    title: "About",
+    url: "/About",
+    icon: Book,
+  },
+  {
+    title: "Advance Search",
+    url: `/advanceSearch`,
+    icon: Search,
+  }
+]
+
+export function AppSidebar({ type }: { type: string }) {
+  return (
+    <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Get Started</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href="#">
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {type === 'client' ? (
+                <>
+                 {clientLinks.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <a href="#">
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {items.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <a href="#">
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -72,6 +107,5 @@ const items = [
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-    )
-  }
-  
+  )
+}
