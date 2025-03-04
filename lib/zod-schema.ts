@@ -34,15 +34,18 @@ export type CreateNewAuthorSchemaType = z.infer<typeof CreateNewAuthorSchema>
 
 
 export const CreateNewPaperSchema = z.object({
-    
-    title: z.string(),
-    description: z.string(),
-    categories: z.array(z.string()),
-    publication_source: z.string(),
-    publication_date: z.string(),
-    url: z.string(),
 
-    authorId: z.string(),
+    title: z.string().min(1, "Title is required"),
+    description: z.string().min(1, "Description is required"),
+    categories: z.array(z.string()).nonempty("At least one category is required"),
+    publication_source: z.string().min(1, "Publication source is required"),
+    publication_date: z.string().refine(
+        (date) => !isNaN(Date.parse(date)), 
+        { message: "Invalid date format. Use YYYY-MM-DD HH:mm:ss.SSS" }
+    ),
+    url: z.string().url("Invalid URL format"),
+    authorId: z.string().uuid("Invalid author ID format"),
+
 })
 
 export type CreateNewPaperSchemaType = z.infer<typeof CreateNewPaperSchema>
