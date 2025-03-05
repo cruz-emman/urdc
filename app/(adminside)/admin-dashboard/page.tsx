@@ -48,98 +48,12 @@ const admindashboard = () => {
   return (
     <main>
         <div>admindashboard</div>
-        {/* Form */}
-        <div className="flex flex-col p-10 h-auto bg-white items-center gap-3 ">
-            <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-[800px]">
-                <Link href="/..." className="flex justify-end underline text-blue-600">Advance Search</Link>
 
-                <div className="flex gap-6 flex-row w-full">
-                <div className="flex-3 w-full">
-                    <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormControl>
-                            <Input placeholder="Search for Tite" {...field} />
-                        </FormControl>
-                        </FormItem>
-                    )}
-                    />
-                </div>
-                <div className="flex-1 w-full">
-                    <Button type="submit">Submit</Button>
-                </div> 
-                </div>
-                
-                <div className="flex gap-6 flex-row w-full mt-1 flex-wrap">
-                <FormField
-                control={form.control}
-                name="year_start"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Year Start</FormLabel>
-                    <FormControl>
-                        <Input 
-                        placeholder=""
-                        type='number'
-                        {...field} />
-                    </FormControl>
-                    
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-
-                <FormField
-                control={form.control}
-                name="year_end"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Year End</FormLabel>
-                    <FormControl>
-                        <Input 
-                        placeholder=""
-                        type='number'
-                        {...field} />
-                    </FormControl>
-                    
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-
-                <FormField
-                control={form.control}
-                name="subj_category"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Subject Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a category to search" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        <SelectItem value="eng">English</SelectItem>
-                        <SelectItem value="fil">Filipino</SelectItem>
-                        <SelectItem value="math">Mathematics</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-                </div>
-
-            </form>
-            </Form>
-        </div>
     </main>
 
   )
 }
+
+
 
 export default admindashboard

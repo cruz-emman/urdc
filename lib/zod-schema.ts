@@ -24,8 +24,6 @@ export const AddResourceSchema = z.object({
       required_error: "Publication date is required",
     }),
     publication_source: z.string(),
-    url: z.string().url("Please enter a valid URL"),
-    categories: z.array(z.string()).min(1, "Select at least one category"),
     contributors: z
       .array(
         z.object({
@@ -36,7 +34,13 @@ export const AddResourceSchema = z.object({
         }),
       )
       .min(1, "Add at least one contributor"),
+    url: z.string().url("Please enter a valid URL"),
+    categories: z.array(z.string()).min(1, "Select at least one category"),
     description: z.string().min(1, "Description is required").max(320),
 })
+
+/*
+    
+*/
 
 export type AddResourceSchemaType = z.infer<typeof AddResourceSchema> 

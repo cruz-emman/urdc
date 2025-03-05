@@ -5,7 +5,6 @@ function AdminLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
-}>) {
     return (
         <main className="w-full">
             <SidebarProvider>
@@ -13,7 +12,6 @@ function AdminLayout({
                 <main className="w-full">
                     <SidebarTrigger />
                     <div className=" w-full mx-auto ">
-                        {children}
                     </div>
                 </main>
             </SidebarProvider>
