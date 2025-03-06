@@ -1,26 +1,26 @@
-'use client'
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+"use client"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import type React from "react"
+
 import { AppSidebar } from "@/components/app-sidebar"
 
 function AdminLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-    return (
-        <main>
-            <SidebarProvider>
-                <AppSidebar type="admin" />
-                <main>
-                    <SidebarTrigger />
-                    <div className="relative container px-4">
-                    {children}
-                    </div>
-                </main>
-            </SidebarProvider>
-        </main>
-    )
+  return (
+    <SidebarProvider>
+      <AppSidebar type="admin" />
+      <SidebarInset>
+        <header className="flex h-16 items-center border-b px-4">
+          <SidebarTrigger className="mr-2" />
+        </header>
+        <div className="flex flex-1 ">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }
 
-
 export default AdminLayout
+

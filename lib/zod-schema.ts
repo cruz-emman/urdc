@@ -23,9 +23,9 @@ export type SignInSchemaType = z.infer<typeof SignInSchema>
 //CREATE NEW AUTHOR
 
 export const CreateNewAuthorSchema = z.object({
-    first_name: z.string(),
+    first_name: z.string().min(4, "First name must be at least 4 characters long"),
     middle_name: z.string().optional(),
-    last_name: z.string(),
+    last_name: z.string().min(4, "Last name must be at least 4 characters long"),
     email: z.string().email(),
 })
 
