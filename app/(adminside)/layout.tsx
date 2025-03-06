@@ -13,7 +13,9 @@ function AdminLayout({
                 <AppSidebar type="admin" />
                 <main>
                     <SidebarTrigger />
+                    <div className="relative container px-4">
                     {children}
+                    </div>
                 </main>
             </SidebarProvider>
         </main>
