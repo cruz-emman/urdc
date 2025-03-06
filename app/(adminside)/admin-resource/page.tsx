@@ -35,46 +35,41 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
 
 
 const data: Payment[] = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
+    title: "m5gr84i9",
+    categories: [
+      "Science",
+      "Technology"
+    ],
+    publication_source: "JSTOR",
+    publication_date: new Date("2022-02-01T00:00:00.000Z"),
+    url: "https://example.com/article/m5gr84i9",
+    authorId: "auth123",
   },
   {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
+    title: "dfawefwagea",
+    categories: [
+      "Technology"
+    ],
+    publication_source: "JSTOR",
+    publication_date: new Date("2022-02-01T00:00:00.000Z"),
+    url: "https://example.com/article/dfawefwagea",
+    authorId: "auth123",
   },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-]
+];
+
 
 export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+  title: string
+  categories: Array<string> 
+  publication_source: string
+  publication_date: Date
+  url: string
+  authorId: string
 }
 
 
@@ -102,40 +97,75 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "title",
+    header: "Title",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("title")}</div>
+    ),
+  },
+  
+  {
+    accessorKey: "authorId",
+    header: "Author",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("authorId")}</div>
     ),
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
+    accessorKey: "categories",
+    header: "Cateogries",
+    cell: ({ row }) => {
+      const categories = row.getValue("categories") as string[];
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      )
+        <div className="flex flex-wrap gap-1">
+          {categories.map((category) => (
+            <Badge key={category} variant="secondary" className="px-3 py-1 capitalize">
+              {category}
+            </Badge>
+          ))}
+        </div>
+      );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "publication_source",
+    header: "Source",
+    cell: ({ row }) => (
+      <Badge variant="secondary" className="px-3 py-1 capitalize">
+        {row.getValue("publication_source")}
+      </Badge>
+    ),
+  },
+  {
+    accessorKey: "publication_date",
+    header: "Date Published",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
+      // Get the Date object from the row
+      const date = row.getValue("publication_date");
+      
+      // Format the date as a readable string
+      const formattedDate = date instanceof Date 
+        ? date.toLocaleDateString() // e.g., "3/6/2025"
+        : String(date); // Fallback in case it's not a Date object
+      
+      return <div className="capitalize">{formattedDate}</div>;
+    },
+  },
+  {
+    accessorKey: "url",
+    header: "URL",
+    cell: ({ row }) => {
+      const url = row.getValue("url") as string;
+      return (
+        <a 
+          href={url} 
+          className="text-blue-600 hover:underline" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          {url}
+        </a>
+      );
     },
   },
   {
@@ -146,22 +176,21 @@ export const columns: ColumnDef<Payment>[] = [
 
       return (
         <DropdownMenu>
+
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end">
+
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+
+            <DropdownMenuItem>Edit Resource</DropdownMenuItem>
+            <DropdownMenuItem>Archive Resource</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -199,21 +228,25 @@ const ListOfPapers = () => {
     },
   })
   return (
-    <div className='relative  p-4'>
+    <div className='relative  p-4 m-8 w-full'>
       <div className='flex flex-col  '>
+
+        {/*Title and button*/}
         <div className='w-full flex flex-row justify-between'>
-          <h1 className='text-2xl font-semibold text-foreground'>List of Authors</h1>
+          <h1 className='text-2xl font-semibold text-foreground'>List of Resources</h1>
+
           <Button asChild>
-            <Link href='/admin-authors/new'>
-              Create new author
+            <Link href='/admin-resource/new'>
+              Create new paper
             </Link>
           </Button>
+
         </div>
 
-        <div className='flex flex-col gap-y-2 w-full md:w-[1440px] overflow-x-auto'>
+        <div className='flex flex-col gap-y-2 w-full overflow-x-auto'>
           <div className="flex items-center py-4">
             <Input
-              placeholder="Filter emails..."
+              placeholder="Filter resource..."
               value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
               onChange={(event) =>
                 table.getColumn("email")?.setFilterValue(event.target.value)

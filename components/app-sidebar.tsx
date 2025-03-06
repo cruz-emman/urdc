@@ -17,17 +17,22 @@ import {
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "admin-dashboard",
     icon: Home,
   },
   {
     title: "Upload Resource",
-    url: "#",
+    url: "/admin-resource/new",
     icon: Upload,
   },
   {
-    title: "Search",
-    url: "#",
+    title: "View Resources",
+    url: "/admin-resource",
+    icon: Search,
+  },
+  {
+    title: "View Authors",
+    url: "/admin-authors",
     icon: Search,
   },
   {
@@ -81,7 +86,7 @@ export function AppSidebar({ type }: { type: string }) {
                   {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
-                        <a href="#">
+                        <a href={item.url}>
                           <item.icon />
                           <span>{item.title}</span>
                         </a>
