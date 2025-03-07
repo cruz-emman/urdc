@@ -13,7 +13,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -36,6 +35,15 @@ import {
 } from "@/components/ui/table"
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { ArrowUpDown, BookOpen, ChevronDown, Download, MoreHorizontal, Plus, Search } from "lucide-react"
 
 
 const data: Payment[] = [
@@ -228,59 +236,87 @@ const ListOfPapers = () => {
     },
   })
   return (
-    <div className='relative  p-4 m-8 w-full'>
-      <div className='flex flex-col  '>
+    <div className='min-h-screen w-full bg-background flex flex-col'>
+      <div className='container mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6'>
 
-        {/*Title and button*/}
-        <div className='w-full flex flex-row justify-between'>
-          <h1 className='text-2xl font-semibold text-foreground'>List of Resources</h1>
+        {/* Breadcrumbs */}
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin-dashboard">Dashboard</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin-resource">
+                Resources
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-          <Button asChild>
-            <Link href='/admin-resource/new'>
-              Create new paper
-            </Link>
-          </Button>
-
-        </div>
-
-        <div className='flex flex-col gap-y-2 w-full overflow-x-auto'>
-          <div className="flex items-center py-4">
-            <Input
-              placeholder="Filter resource..."
-              value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-              onChange={(event) =>
-                table.getColumn("email")?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="ml-auto">
-                  Columns <ChevronDown />
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <BookOpen className="h-7 w-7 text-primary" />
+                <div>
+                  <CardTitle className="text-lg md:text-2xl font-bold">List of Resources</CardTitle>
+                  <CardDescription>Manage the resources</CardDescription>
+                </div>
+              </div>
+              <Button asChild className="sm:w-auto">
+                <Link href="/admin-resource/new" className="flex items-center gap-1">
+                  <Plus className="h-4 w-4" />
+                  <span>Create new resource</span>
+                </Link>
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+              <div className="relative flex-1 max-w-sm">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Filter resources..."
+                  value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+                  onChange={(event) => table.getColumn("title")?.setFilterValue(event.target.value)}
+                  className="pl-8"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="ml-auto">
+                  <Download className="h-4 w-4 mr-1" />
+                  Export
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => {
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        className="capitalize"
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) =>
-                          column.toggleVisibility(!!value)
-                        }
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    )
-                  })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          <div className="rounded-md border w-full">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="ml-auto">
+                      Columns <ChevronDown className="h-4 w-4 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {table
+                      .getAllColumns()
+                      .filter((column) => column.getCanHide())
+                      .map((column) => {
+                        return (
+                          <DropdownMenuCheckboxItem
+                            key={column.id}
+                            className="capitalize"
+                            checked={column.getIsVisible()}
+                            onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                          >
+                            {column.id}
+                          </DropdownMenuCheckboxItem>
+                        )
+                      })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+
+            <div className="rounded-md border w-full">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -329,32 +365,32 @@ const ListOfPapers = () => {
                 )}
               </TableBody>
             </Table>
-          </div>
-          <div className="flex items-center justify-end space-x-2 py-4">
-            <div className="flex-1 text-sm text-muted-foreground">
-              {table.getFilteredSelectedRowModel().rows.length} of{" "}
-              {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
-            <div className="space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                Next
-              </Button>
+            <div className="flex items-center justify-between space-x-2 py-4">
+              <div className="text-sm text-muted-foreground">
+                {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
+                selected.
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  Previous
+                </Button>
+                <div className="text-sm text-muted-foreground">
+                  Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                </div>
+                <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                  Next
+                </Button>
+              </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+
       </div>
     </div>
   )

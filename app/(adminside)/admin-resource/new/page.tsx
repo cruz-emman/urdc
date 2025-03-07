@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormDescription, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select,  SelectContent,  SelectItem,  SelectTrigger,  SelectValue,} from "@/components/ui/select";
 import { Popover,  PopoverContent,  PopoverTrigger,} from "@/components/ui/popover";
+import {  Breadcrumb,  BreadcrumbItem,  BreadcrumbLink,  BreadcrumbList,  BreadcrumbSeparator,} from "@/components/ui/breadcrumb"
 import {  Dialog,  DialogContent,  DialogDescription,  DialogHeader,  DialogTitle,  DialogTrigger} from "@/components/ui/dialog"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { CreateNewPaperSchema, CreateNewPaperSchemaType } from '@/lib/zod-schema'
 import { randomUUID } from 'crypto';
-
+import { Separator } from "@/components/ui/separator"
+import { AtSign, BookOpen, User, UserRound } from "lucide-react"
 
 
 
@@ -153,354 +155,398 @@ const CreateNewPaper = () => {
   }
 
   return (
-    <div className='relative p-4'>
-      <div className='flex flex-col'>
-      <p className='text-4xl items-start flex justify-start w-full font-bold mb-4'>Submit Resource</p>
-      <Form  {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-xl mx-auto space-y-8">
-          
-          {/*Title Input Field*/}
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                <FormControl>
-                    <Input placeholder="Enter publication title" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-          />
+    <div className='min-h-screen w-full bg-background flex flex-col'>
+      <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin-dashboard">Dashboard</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
 
-          {/* Publication Date */}
-          <FormField
-            control={form.control}
-            name="publication_date"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Publication Date</FormLabel>
-                <div className="grid grid-cols-3 gap-2">
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin-authors">
+                Resources
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
 
-                  {/* Day Select */}
-                  <Select
-                    onValueChange={(value) => {
-                      const currentDate = field.value ? new Date(field.value) : new Date();
-                      const newDate = formatDate(
-                        parseInt(value),
-                        currentDate.getMonth() + 1,
-                        currentDate.getFullYear()
-                      );
-                      field.onChange(newDate);
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Day" />
-                    </SelectTrigger>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/admin-authors/new">
+                New
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
 
-                    <SelectContent>
-                      {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                        <SelectItem key={day} value={String(day)}>
-                          {day}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+      <div className="flex-1 flex flex-col items-center py-10 px-4 sm:px-6">
+        <div className="w-full max-w-[1280px]">
+          {/* Header Section */}
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-full mb-4">
+              <BookOpen className="h-8 w-8 text-primary" />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight">New Resources</h1>
+            <p className="text-muted-foreground mt-2">Add a new resource to the collection</p>
+          </div>
 
-                  {/* Month Select */}
-                  <Select 
-                    onValueChange={(value) => {
-                      const currentDate = field.value ? new Date(field.value) : new Date();
-                      const newDate = formatDate(
-                        currentDate.getDate(),
-                        parseInt(value),
-                        currentDate.getFullYear()
-                      );
-                      field.onChange(newDate);
-                    }}  
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Month" />
-                    </SelectTrigger>
+          <div className="w-full">
+            <div className="mb-6">
+                <h2 className="text-xl font-semibold">Resource Information</h2>
+                <p className="text-muted-foreground text-sm mt-1">Enter the resource's personal details below</p>
+                <Separator className="mt-4" />
+            </div>
+          </div>
 
-                    <SelectContent>
-                      <SelectItem value="1">January</SelectItem>
-                      <SelectItem value="2">February</SelectItem>
-                      <SelectItem value="3">March</SelectItem>
-                      <SelectItem value="4">April</SelectItem>
-                      <SelectItem value="5">May</SelectItem>
-                      <SelectItem value="6">June</SelectItem>
-                      <SelectItem value="7">July</SelectItem>
-                      <SelectItem value="8">August</SelectItem>
-                      <SelectItem value="9">September</SelectItem>
-                      <SelectItem value="10">October</SelectItem>
-                      <SelectItem value="11">November</SelectItem>
-                      <SelectItem value="12">December</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Year Select */}
-                  <Select
-                    onValueChange={(value) => {
-                      const currentDate = field.value ? new Date(field.value) : new Date();
-                      const newDate = formatDate(
-                        currentDate.getDate(),
-                        currentDate.getMonth() + 1,
-                        parseInt(value)
-                      );
-                      field.onChange(newDate);
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Year" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      {Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - 29 + i).map((year) => (
-                        <SelectItem key={year} value={String(year)}>
-                          {year}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* URL */}
-          <FormField
-            control={form.control}
-            name="url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>URL</FormLabel>
-                <FormControl>
-                  <Input placeholder="https://example.com/publication" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Categories */}
-          <FormField
-            control={form.control}
-            name="categories"
-            render={() => (
-              <FormItem>
-                <FormLabel>Categories</FormLabel>
-
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {selectedCategories.map((category) => (
-                      <Badge key={category.id} variant="secondary" className="px-3 py-1">
-                        {category.name}
-                        <button
-                          type="button"
-                          onClick={() => removeCategory(category.id)}
-                          className="ml-2 text-muted-foreground hover:text-foreground"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                  <Popover open={categoriesOpen} onOpenChange={setCategoriesOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={categoriesOpen}
-                        className="w-full justify-between text-gray-400"
-                      >
-                        Select categories
-                        <PlusCircle className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-
-                    <PopoverContent className="w-full p-0">
-                      <Command>
-                        <CommandInput placeholder="Search categories..." />
-                        <CommandList>
-                          <CommandEmpty>No category found.</CommandEmpty>
-                          <CommandGroup>
-                            {mockCategories.map((category) => (
-                              <CommandItem
-                                key={category.id}
-                                value={category.name}
-                                onSelect={() => toggleCategory(category.id, category.name)}
-                              >
-                                <div className="flex items-center">
-                                  <span
-                                    className={cn(
-                                      "mr-2 h-4 w-4 rounded-sm border border-primary",
-                                      selectedCategories.some((c) => c.id === category.id)
-                                        ? "bg-primary"
-                                        : "bg-transparent",
-                                    )}
-                                  ></span>
-                                  {category.name}
-                                </div>
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Contributors */}
-        <FormField
-          control={form.control}
-          name="authorId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contributors</FormLabel>
-              <div className="space-y-4">
-                {/* Selected Contributors */}
-                <div className="space-y-2">
-                  {selectedContributors.map((contributor) => (
-                    <div key={contributor.id} className="flex items-center justify-between p-3 border rounded-md">
-                      <div>
-                        <p className="font-medium">
-                          {contributor.firstName} {contributor.lastName}
-                        </p>
-                        <p className="text-sm text-muted-foreground">{contributor.email}</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {/* Add radio button to select main author (authorId) */}
-                        <input 
-                          type="radio" 
-                          name="mainAuthor"
-                          checked={field.value === contributor.id}
-                          onChange={() => field.onChange(contributor.id)}
-                          className="h-4 w-4"
-                        />
-                        <label className="text-xs mr-2">Main author</label>
-                        <Button type="button" variant="ghost" size="sm" onClick={() => removeContributor(contributor.id)}>
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Search Existing Contributors */}
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="relative flex-1">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search contributors..."
-                        className="pl-8"
-                        value={contributorSearchTerm}
-                        onChange={(e) => setContributorSearchTerm(e.target.value)}
-                      />
-                    </div>
-                    <Dialog open={newContributorDialogOpen} onOpenChange={setNewContributorDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button type="button" variant="outline">
-                          <PlusCircle className="mr-2 h-4 w-4" />
-                          New
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Add New Contributor</DialogTitle>
-                        </DialogHeader>
-                        <NewContributorForm onAdd={addNewContributor} />
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-
-                  {/* Search Results */}
-                  {contributorSearchTerm && (
-                    <div className="border rounded-md overflow-hidden">
-                      {filteredContributors.length > 0 ? (
-                        filteredContributors.map((contributor) => (
-                          <div
-                            key={contributor.id}
-                            className="p-2 hover:bg-accent cursor-pointer flex items-center justify-between"
-                            onClick={() => addExistingContributor(contributor)}
-                          >
-                            <div>
-                              <p className="font-medium">
-                                {contributor.firstName} {contributor.lastName}
-                              </p>
-                              <p className="text-sm text-muted-foreground">{contributor.email}</p>
-                            </div>
-                            <Button type="button" variant="ghost" size="sm">
-                              <PlusCircle className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="p-2 text-center text-muted-foreground">No contributors found</div>
-                      )}
-                    </div>
-                  )}
-                </div>
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-
-          {/*Publication Source Field*/}
-          <FormField
-              control={form.control}
-              name="publication_source"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Publication Source</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Form  {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              {/*Title Input Field*/}
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <BookOpen className="h-4 w-4 text-muted-foreground" />
+                        Titleeeeeeeeeeeee
+                      </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Publication Source" />
-                      </SelectTrigger>
+                        <Input placeholder="Enter publication title" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="googleScholar">Google Scholar</SelectItem>
-                      <SelectItem value="jstor">JSTOR</SelectItem>
-                      <SelectItem value="idk">IDK</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
+                    <FormMessage />
+                    </FormItem>
+                )}
               />
 
-          
-          {/*Description Input Field*/}
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
+              {/* Publication Date */}
+              <FormField
+                control={form.control}
+                name="publication_date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Publication Date</FormLabel>
+                    <div className="grid grid-cols-3 gap-2">
+
+                      {/* Day Select */}
+                      <Select
+                        onValueChange={(value) => {
+                          const currentDate = field.value ? new Date(field.value) : new Date();
+                          const newDate = formatDate(
+                            parseInt(value),
+                            currentDate.getMonth() + 1,
+                            currentDate.getFullYear()
+                          );
+                          field.onChange(newDate);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Day" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                            <SelectItem key={day} value={String(day)}>
+                              {day}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {/* Month Select */}
+                      <Select 
+                        onValueChange={(value) => {
+                          const currentDate = field.value ? new Date(field.value) : new Date();
+                          const newDate = formatDate(
+                            currentDate.getDate(),
+                            parseInt(value),
+                            currentDate.getFullYear()
+                          );
+                          field.onChange(newDate);
+                        }}  
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Month" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          <SelectItem value="1">January</SelectItem>
+                          <SelectItem value="2">February</SelectItem>
+                          <SelectItem value="3">March</SelectItem>
+                          <SelectItem value="4">April</SelectItem>
+                          <SelectItem value="5">May</SelectItem>
+                          <SelectItem value="6">June</SelectItem>
+                          <SelectItem value="7">July</SelectItem>
+                          <SelectItem value="8">August</SelectItem>
+                          <SelectItem value="9">September</SelectItem>
+                          <SelectItem value="10">October</SelectItem>
+                          <SelectItem value="11">November</SelectItem>
+                          <SelectItem value="12">December</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      {/* Year Select */}
+                      <Select
+                        onValueChange={(value) => {
+                          const currentDate = field.value ? new Date(field.value) : new Date();
+                          const newDate = formatDate(
+                            currentDate.getDate(),
+                            currentDate.getMonth() + 1,
+                            parseInt(value)
+                          );
+                          field.onChange(newDate);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Year" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          {Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - 29 + i).map((year) => (
+                            <SelectItem key={year} value={String(year)}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* URL */}
+              <FormField
+                control={form.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://example.com/publication" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Categories */}
+              <FormField
+                control={form.control}
+                name="categories"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Categories</FormLabel>
+
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {selectedCategories.map((category) => (
+                          <Badge key={category.id} variant="secondary" className="px-3 py-1">
+                            {category.name}
+                            <button
+                              type="button"
+                              onClick={() => removeCategory(category.id)}
+                              className="ml-2 text-muted-foreground hover:text-foreground"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                      <Popover open={categoriesOpen} onOpenChange={setCategoriesOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={categoriesOpen}
+                            className="w-full justify-between text-gray-400"
+                          >
+                            Select categories
+                            <PlusCircle className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandInput placeholder="Search categories..." />
+                            <CommandList>
+                              <CommandEmpty>No category found.</CommandEmpty>
+                              <CommandGroup>
+                                {mockCategories.map((category) => (
+                                  <CommandItem
+                                    key={category.id}
+                                    value={category.name}
+                                    onSelect={() => toggleCategory(category.id, category.name)}
+                                  >
+                                    <div className="flex items-center">
+                                      <span
+                                        className={cn(
+                                          "mr-2 h-4 w-4 rounded-sm border border-primary",
+                                          selectedCategories.some((c) => c.id === category.id)
+                                            ? "bg-primary"
+                                            : "bg-transparent",
+                                        )}
+                                      ></span>
+                                      {category.name}
+                                    </div>
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Contributors */}
+            <FormField
+              control={form.control}
+              name="authorId"
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
-                <FormControl>
-                    <Textarea placeholder="Enter description" {...field} />
-                </FormControl>
-                <FormMessage />
+                  <FormLabel>Contributors</FormLabel>
+                  <div className="space-y-4">
+                    {/* Selected Contributors */}
+                    <div className="space-y-2">
+                      {selectedContributors.map((contributor) => (
+                        <div key={contributor.id} className="flex items-center justify-between p-3 border rounded-md">
+                          <div>
+                            <p className="font-medium">
+                              {contributor.firstName} {contributor.lastName}
+                            </p>
+                            <p className="text-sm text-muted-foreground">{contributor.email}</p>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {/* Add radio button to select main author (authorId) */}
+                            <input 
+                              type="radio" 
+                              name="mainAuthor"
+                              checked={field.value === contributor.id}
+                              onChange={() => field.onChange(contributor.id)}
+                              className="h-4 w-4"
+                            />
+                            <label className="text-xs mr-2">Main author</label>
+                            <Button type="button" variant="ghost" size="sm" onClick={() => removeContributor(contributor.id)}>
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Search Existing Contributors */}
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="relative flex-1">
+                          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search contributors..."
+                            className="pl-8"
+                            value={contributorSearchTerm}
+                            onChange={(e) => setContributorSearchTerm(e.target.value)}
+                          />
+                        </div>
+                        <Dialog open={newContributorDialogOpen} onOpenChange={setNewContributorDialogOpen}>
+                          <DialogTrigger asChild>
+                            <Button type="button" variant="outline">
+                              <PlusCircle className="mr-2 h-4 w-4" />
+                              New
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Add New Contributor</DialogTitle>
+                            </DialogHeader>
+                            <NewContributorForm onAdd={addNewContributor} />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+
+                      {/* Search Results */}
+                      {contributorSearchTerm && (
+                        <div className="border rounded-md overflow-hidden">
+                          {filteredContributors.length > 0 ? (
+                            filteredContributors.map((contributor) => (
+                              <div
+                                key={contributor.id}
+                                className="p-2 hover:bg-accent cursor-pointer flex items-center justify-between"
+                                onClick={() => addExistingContributor(contributor)}
+                              >
+                                <div>
+                                  <p className="font-medium">
+                                    {contributor.firstName} {contributor.lastName}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">{contributor.email}</p>
+                                </div>
+                                <Button type="button" variant="ghost" size="sm">
+                                  <PlusCircle className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="p-2 text-center text-muted-foreground">No contributors found</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <FormMessage />
+                  </div>
                 </FormItem>
-            )}
-          />
+              )}
+            />
+
+              {/*Publication Source Field*/}
+              <FormField
+                  control={form.control}
+                  name="publication_source"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Publication Source</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Publication Source" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="googleScholar">Google Scholar</SelectItem>
+                          <SelectItem value="jstor">JSTOR</SelectItem>
+                          <SelectItem value="idk">IDK</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  />
+
+              
+              {/*Description Input Field*/}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                    <FormControl>
+                        <Textarea placeholder="Enter description" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+              />
 
 
-          <Button type="submit" className="w-full md:w-auto">
-            Submit Publication
-          </Button>
-        </form>
-      </Form>
+              <Button type="submit" className="w-full md:w-auto">
+                Submit Publication
+              </Button>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+      </div>
   )
 }
 
