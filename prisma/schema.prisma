@@ -30,7 +30,9 @@ model Publish_Papers {
   description        String
   categories         Json
   publication_source String
-  publication_date   String
+  publication_day    String
+  publication_month  String
+  publication_year   String
   url                String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
