@@ -24,7 +24,7 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="font-medium text-lg">Trinity University Of Asia</h3>
-              <p className="text-xs text-muted-foreground">URDC</p>
+              <p className="text-xs text-muted-foreground">11URDC</p>
             </div>
           </div>
           <nav className="hidden md:flex items-center gap-6">
