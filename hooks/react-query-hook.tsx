@@ -1,5 +1,5 @@
 'use client'
-import { CreateNewAuthorSchemaType } from "@/lib/zod-schema"
+import { CreateNewAuthorSchemaType, CreateNewPaperSchemaType } from "@/lib/zod-schema"
 import { QueryClientProvider, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
 import { toast } from "sonner"
@@ -54,4 +54,51 @@ export const useCreateNewAuthorMutation = () => {
     })
     
     return mutation
+}
+
+
+
+
+//PUBLISH DATA 
+
+export const usePapersQuery = () => {
+    return useQuery({
+        queryKey: ['papers'],
+        queryFn: async () => {
+            const response = await axios.get('/api/published-papers')
+            return response.data
+        }
+    })
+}
+
+export const useCreateNewPaperMutation = () => {
+    const queryClient = useQueryClient()
+    const router = useRouter()
+    
+    const mutation = useMutation({
+        mutationFn: async (values: CreateNewPaperSchemaType) => {
+            const response = await axios.post('/api/published-papers', values)
+            return response.data
+        },
+        onSuccess: (data) => {
+            toast.success("Paper successfully created"),
+            queryClient.invalidateQueries({
+                queryKey: ['papers']
+            }),
+            router.push('/admin-resource')
+        },
+        onError: (error: Error | AxiosError) => {
+            console.error(error)
+            
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || "Failed to create new author"
+                toast.error(errorMessage)
+            } else {
+                toast.error("Failed to create new author")
+            }
+        }
+    })
+
+    return mutation
+    
 }

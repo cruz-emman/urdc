@@ -36,17 +36,15 @@ export type CreateNewAuthorSchemaType = z.infer<typeof CreateNewAuthorSchema>
 export const CreateNewPaperSchema = z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
-    categories: z.array(z.string()).min(1, "Select at least one category"),
+    categories: z.string().min(1, "Categories is required"),
     publication_source: z.string().min(1, "Publication source is required"),
-    publication_date: z.string().refine(
-        (date) => !isNaN(Date.parse(date)), 
-        { message: "Invalid date format. Use YYYY-MM-DD HH:mm:ss.SSS" }
-    ),
+    publication_day: z.string().min(1, "Publication day is required"),
+    publication_month: z.string().min(1, "Publication month is required"),
+    publication_year: z.string().min(1, "Publication year is required"),
     url: z.string().url("Invalid URL format"),
     authorId: z.string(),
 
 })
 
-//.uuid("Invalid author ID format") Ibalik nalang pag puwede maglagay ng uuid sa publish papers 
 
 export type CreateNewPaperSchemaType = z.infer<typeof CreateNewPaperSchema>

@@ -28,7 +28,7 @@ model Publish_Papers {
   id                 String   @id @default(uuid())
   title              String
   description        String
-  categories         Json
+  categories         String
   publication_source String
   publication_day    String
   publication_month  String

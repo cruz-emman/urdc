@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   ColumnDef,
@@ -44,65 +44,38 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { ArrowUpDown, BookOpen, ChevronDown, Download, MoreHorizontal, Plus, Search } from "lucide-react"
+import { usePapersQuery } from '@/hooks/react-query-hook'
+import LoadingFallback from '@/components/ui/loading'
 
 
-const data: Payment[] = [
-  {
-    title: "m5gr84i9",
-    categories: [
-      "Science",
-      "Technology"
-    ],
-    publication_source: "JSTOR",
-    publication_date: new Date("2022-02-01T00:00:00.000Z"),
-    url: "https://example.com/article/m5gr84i9",
-    authorId: "auth123",
-  },
-  {
-    title: "dfawefwagea",
-    categories: [
-      "Technology"
-    ],
-    publication_source: "JSTOR",
-    publication_date: new Date("2022-02-01T00:00:00.000Z"),
-    url: "https://example.com/article/dfawefwagea",
-    authorId: "auth123",
-  },
-];
 
-
-export type Payment = {
-  title: string
-  categories: Array<string> 
-  publication_source: string
-  publication_date: Date
-  url: string
-  authorId: string
+interface PublishedPapers {
+  Authors: {
+    first_name: string
+    last_name: string
+  }
+  title: string;
+  description: string;
+  categories: string;
+  publication_souce: string;
+  publication_day: string;
+  publication_month: string;
+  publication_year: string;
+  url: string;
+  
 }
 
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<PublishedPapers>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    accessorKey: "authorId",
+    header: "Author",
+    cell: ({ row }) => {
+      const authorName = row.original?.Authors.first_name + " " + row.original?.Authors.last_name
+      return (
+        <div className="capitalize text-foreground">{authorName}</div>
+      )
+    }
   },
   {
     accessorKey: "title",
@@ -110,30 +83,6 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("title")}</div>
     ),
-  },
-  
-  {
-    accessorKey: "authorId",
-    header: "Author",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("authorId")}</div>
-    ),
-  },
-  {
-    accessorKey: "categories",
-    header: "Cateogries",
-    cell: ({ row }) => {
-      const categories = row.getValue("categories") as string[];
-      return (
-        <div className="flex flex-wrap gap-1">
-          {categories.map((category) => (
-            <Badge key={category} variant="secondary" className="px-3 py-1 capitalize">
-              {category}
-            </Badge>
-          ))}
-        </div>
-      );
-    },
   },
   {
     accessorKey: "publication_source",
@@ -145,30 +94,25 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "publication_date",
-    header: "Date Published",
-    cell: ({ row }) => {
-      // Get the Date object from the row
-      const date = row.getValue("publication_date");
-      
-      // Format the date as a readable string
-      const formattedDate = date instanceof Date 
-        ? date.toLocaleDateString() // e.g., "3/6/2025"
-        : String(date); // Fallback in case it's not a Date object
-      
-      return <div className="capitalize">{formattedDate}</div>;
-    },
+    accessorKey: "publication_day",
+    header: "Source",
+    cell: ({ row }) => (
+      <Badge variant="secondary" className="px-3 py-1 capitalize">
+        {row.getValue("publication_day")}
+      </Badge>
+    ),
   },
+ 
   {
     accessorKey: "url",
     header: "URL",
     cell: ({ row }) => {
       const url = row.getValue("url") as string;
       return (
-        <a 
-          href={url} 
-          className="text-blue-600 hover:underline" 
-          target="_blank" 
+        <a
+          href={url}
+          className="text-blue-600 hover:underline"
+          target="_blank"
           rel="noopener noreferrer"
         >
           {url}
@@ -209,16 +153,19 @@ export const columns: ColumnDef<Payment>[] = [
 
 
 const ListOfPapers = () => {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     []
   )
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
+
+  const listofPapers = usePapersQuery()
+
 
   const table = useReactTable({
-    data,
+    data: listofPapers.data || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -235,6 +182,12 @@ const ListOfPapers = () => {
       rowSelection,
     },
   })
+
+  if(listofPapers.isLoading){
+    return (
+      <LoadingFallback />
+    )
+  }
   return (
     <div className='min-h-screen w-full bg-background flex flex-col'>
       <div className='container mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6'>
@@ -284,10 +237,6 @@ const ListOfPapers = () => {
                 />
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="ml-auto">
-                  <Download className="h-4 w-4 mr-1" />
-                  Export
-                </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="ml-auto">
@@ -317,54 +266,54 @@ const ListOfPapers = () => {
 
 
             <div className="rounded-md border w-full">
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                        </TableHead>
-                      )
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                          </TableHead>
+                        )
+                      })}
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </div>
             <div className="flex items-center justify-between space-x-2 py-4">
               <div className="text-sm text-muted-foreground">

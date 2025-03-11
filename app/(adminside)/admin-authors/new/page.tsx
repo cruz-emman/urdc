@@ -109,8 +109,10 @@ const CreateNewAuthor = () => {
                   name="middle_name"
                   render={({ field }) => (
                     <FormItem>
-                        <BookOpen className="h-4 w-4 text-muted-foreground" />
-                        <FormLabel>Title</FormLabel>
+                        <FormLabel className="flex items-center gap-2">
+                        <UserRound className="h-4 w-4 text-muted-foreground" />
+                        Middle Name
+                      </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter middle name (optional)"

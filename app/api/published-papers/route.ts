@@ -30,7 +30,17 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const { title, description, categories, publication_source, publication_date, url, authorId } = result.data;
+        const { 
+            title, 
+            description, 
+            categories, 
+            publication_source, 
+            publication_day, 
+            publication_month, 
+            publication_year, 
+            url, 
+            authorId
+         } = result.data;
 
         const paper = await db.publish_Papers.create({
             data: {
@@ -38,7 +48,9 @@ export async function POST(request: NextRequest) {
                 description,
                 categories,
                 publication_source,
-                publication_date,
+                publication_day, 
+                publication_month, 
+                publication_year,
                 url,
                 authorId,
             }
