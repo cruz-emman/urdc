@@ -5,41 +5,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
+import ClientHeader from "@/components/client-header"
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-slate-100 to-slate-200 border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="bg-gray-300 w-10 h-10 flex items-center justify-center">
-              <Image
-                src="/trinity_logo.png"
-                alt="Logo"
-                width={40}
-                height={40}
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <h3 className="font-medium text-lg">Trinity University Of Asia</h3>
-              <p className="text-xs text-muted-foreground">11URDC</p>
-            </div>
-          </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              Home
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              About
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
-              Contact
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <ClientHeader/>
 
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-slate-100 to-white py-16 md:py-24">
