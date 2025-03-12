@@ -1,25 +1,19 @@
 'use client'
 import React, { Suspense, useEffect } from 'react';
 import { PlusCircle, Search, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormDescription, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, } from "@/components/ui/breadcrumb"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { CreateNewPaperSchema, CreateNewPaperSchemaType, UpdateNewPaperSchema, UpdateNewPaperSchemaType } from '@/lib/zod-schema'
+import {  UpdateNewPaperSchema, UpdateNewPaperSchemaType } from '@/lib/zod-schema'
 import { Separator } from "@/components/ui/separator"
-import { AtSign, BookOpen, User, UserRound, Calendar } from "lucide-react"
+import { BookOpen, User, Calendar } from "lucide-react"
 import { categoryCollege, categoryGraduateSchool } from '@/lib/data';
-import { updateSinglePaperMutation, useAuthorsQuery, useCreateNewPaperMutation, useGetSinglePaperQuery } from '@/hooks/react-query-hook';
+import { updateSinglePaperMutation, useAuthorsQuery, useGetSinglePaperQuery } from '@/hooks/react-query-hook';
 import SkeletonWrapper from '@/components/ui/skeleton-wrapper';
 import LoadingFallback from '@/components/ui/loading';
 import Link from 'next/link';

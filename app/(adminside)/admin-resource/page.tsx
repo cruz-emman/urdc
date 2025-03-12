@@ -152,7 +152,7 @@ export const columns: ColumnDef<PublishedPapers>[] = [
               <Link href={`/admin-resource/update/${row.original.id}`}>Edit Resource</Link>
             </DropdownMenuItem>
               <DropdownMenuItem  onClick={() => deletePaper(row.original.id)}>
-                Archive Resource
+                Delete Resource
               </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

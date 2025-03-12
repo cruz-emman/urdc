@@ -35,7 +35,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { useAuthorsQuery } from "@/hooks/react-query-hook"
+import { useAuthorsQuery, useDeleteAuthorMutation } from "@/hooks/react-query-hook"
 
 export type Authors = {
   id: string
@@ -85,6 +85,13 @@ export const columns: ColumnDef<Authors>[] = [
     cell: ({ row }) => {
       const author = row.original
 
+      const useDeleteAuthor = useDeleteAuthorMutation()
+            
+      const deleteAuthor = (id:string) => {
+        useDeleteAuthor.mutateAsync(id)
+      }
+      
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -97,11 +104,13 @@ export const columns: ColumnDef<Authors>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <Link href={`/admin-authors/edit/${author.id}`} passHref>
+            <Link href={`/admin-authors/update/${author.id}`} passHref>
               <DropdownMenuItem>Update</DropdownMenuItem>
 
             </Link>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem  onClick={() => deleteAuthor(row.original.id)}>
+              Delete Resource
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

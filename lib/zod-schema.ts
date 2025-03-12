@@ -29,8 +29,15 @@ export const CreateNewAuthorSchema = z.object({
     email: z.string().email(),
 })
 
-export type CreateNewAuthorSchemaType = z.infer<typeof CreateNewAuthorSchema>
+export const UpdateAuthorSchema = z.object({
+    first_name: z.string().min(4, "First name must be at least 4 characters long"),
+    middle_name: z.string().optional(),
+    last_name: z.string().min(4, "Last name must be at least 4 characters long"),
+    email: z.string().email(),
+})
 
+export type CreateNewAuthorSchemaType = z.infer<typeof CreateNewAuthorSchema>
+export type UpdateAuthorSchemaType = z.infer<typeof UpdateAuthorSchema>
 
 
 export const CreateNewPaperSchema = z.object({
