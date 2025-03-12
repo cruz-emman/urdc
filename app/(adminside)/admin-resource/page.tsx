@@ -44,7 +44,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { ArrowUpDown, BookOpen, ChevronDown, Download, MoreHorizontal, Plus, Search } from "lucide-react"
-import { usePapersQuery } from '@/hooks/react-query-hook'
+import { useDeletePaperMutation, usePapersQuery } from '@/hooks/react-query-hook'
 import LoadingFallback from '@/components/ui/loading'
 
 
@@ -62,7 +62,8 @@ interface PublishedPapers {
   publication_month: string;
   publication_year: string;
   url: string;
-  
+  id: string
+
 }
 
 
@@ -80,9 +81,11 @@ export const columns: ColumnDef<PublishedPapers>[] = [
   {
     accessorKey: "title",
     header: "Title",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("title")}</div>
-    ),
+    cell: ({ row }) => {
+      return (
+        <div className="capitalize">{row.getValue("title")}</div>
+      )
+    }
   },
   {
     accessorKey: "publication_source",
@@ -102,7 +105,7 @@ export const columns: ColumnDef<PublishedPapers>[] = [
       </Badge>
     ),
   },
- 
+
   {
     accessorKey: "url",
     header: "URL",
@@ -124,11 +127,15 @@ export const columns: ColumnDef<PublishedPapers>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+
+      const useDeletePaper = useDeletePaperMutation()
+      
+      const deletePaper = (id:string) => {
+        useDeletePaper.mutateAsync(id)
+      }
 
       return (
         <DropdownMenu>
-
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
@@ -141,8 +148,12 @@ export const columns: ColumnDef<PublishedPapers>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem>Edit Resource</DropdownMenuItem>
-            <DropdownMenuItem>Archive Resource</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/admin-resource/update/${row.original.id}`}>Edit Resource</Link>
+            </DropdownMenuItem>
+              <DropdownMenuItem  onClick={() => deletePaper(row.original.id)}>
+                Archive Resource
+              </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -183,7 +194,7 @@ const ListOfPapers = () => {
     },
   })
 
-  if(listofPapers.isLoading){
+  if (listofPapers.isLoading) {
     return (
       <LoadingFallback />
     )

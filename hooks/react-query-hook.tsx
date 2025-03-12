@@ -1,5 +1,5 @@
 'use client'
-import { CreateNewAuthorSchemaType, CreateNewPaperSchemaType } from "@/lib/zod-schema"
+import { CreateNewAuthorSchemaType, CreateNewPaperSchemaType, UpdateNewPaperSchemaType } from "@/lib/zod-schema"
 import { QueryClientProvider, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
 import { toast } from "sonner"
@@ -69,6 +69,80 @@ export const usePapersQuery = () => {
             return response.data
         }
     })
+}
+
+
+export const useGetSinglePaperQuery = (id:string | string[]) => {
+    return useQuery({
+        queryKey: ['papers', id],
+        queryFn: async () => {
+            const respone = await axios.get(`/api/published-papers/${id}`)
+            return respone.data
+        }
+    })
+}
+
+export const updateSinglePaperMutation = (id:string | string[]) => {
+    const queryClient = useQueryClient()
+    const router = useRouter()
+
+    const mutation = useMutation({
+        mutationFn: async (values: UpdateNewPaperSchemaType) => {
+            const response = await axios.patch(`/api/published-papers/${id}`,values)
+            return response.data
+        },
+        onSuccess: (data) => {
+            toast.success("Paper successfully updated"),
+            queryClient.invalidateQueries({
+                queryKey: ['papers']
+            }),
+            router.push('/admin-resource')
+        },
+        onError: (error: Error | AxiosError) => {
+            console.error(error)
+            
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || "Failed to create update paper"
+                toast.error(errorMessage)
+            } else {
+                toast.error("Failed to create update paper")
+            }
+        }
+    })
+
+    return mutation
+
+}
+
+export const useDeletePaperMutation = () => {
+    const queryClient = useQueryClient()
+    const router = useRouter()
+
+    const mutation = useMutation({
+        mutationFn: async (id: string) => {
+            const response = await axios.delete(`/api/published-papers/${id}`)
+            return response.data
+        },
+        onSuccess: (data) => {
+            toast.success("Paper successfully updated"),
+            queryClient.invalidateQueries({
+                queryKey: ['papers']
+            }),
+            router.push('/admin-resource')
+        },
+        onError: (error: Error | AxiosError) => {
+            console.error(error)
+            
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || "Failed to create update paper"
+                toast.error(errorMessage)
+            } else {
+                toast.error("Failed to create update paper")
+            }
+        }
+    })
+
+    return mutation
 }
 
 export const useCreateNewPaperMutation = () => {

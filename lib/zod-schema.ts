@@ -46,5 +46,17 @@ export const CreateNewPaperSchema = z.object({
 
 })
 
+export const UpdateNewPaperSchema = z.object({
+    title: z.string().min(1, "Title is required").optional(),
+    description: z.string().min(1, "Description is required").optional(),
+    categories: z.string().min(1, "Categories is required").optional(),
+    publication_source: z.string().min(1, "Publication source is required").optional(),
+    publication_day: z.string().min(1, "Publication day is required").optional(),
+    publication_month: z.string().min(1, "Publication month is required").optional(),
+    publication_year: z.string().min(1, "Publication year is required").optional(),
+    url: z.string().url("Invalid URL format").optional(),
+    authorId: z.string().optional(),
+});
 
 export type CreateNewPaperSchemaType = z.infer<typeof CreateNewPaperSchema>
+export type UpdateNewPaperSchemaType = z.infer<typeof UpdateNewPaperSchema>;
