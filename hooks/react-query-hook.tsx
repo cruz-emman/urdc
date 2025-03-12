@@ -1,5 +1,5 @@
 'use client'
-import { CreateNewAuthorSchemaType, CreateNewPaperSchemaType, UpdateNewPaperSchemaType } from "@/lib/zod-schema"
+import { CreateNewAuthorSchemaType, CreateNewPaperSchemaType, UpdateNewPaperSchemaType, UpdateAuthorSchema, UpdateAuthorSchemaType } from "@/lib/zod-schema"
 import { QueryClientProvider, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
 import { toast } from "sonner"
@@ -56,6 +56,79 @@ export const useCreateNewAuthorMutation = () => {
     return mutation
 }
 
+export const updateSingleAuthorMutation = (id:string | string[]) => {
+    const queryClient = useQueryClient()
+    const router = useRouter()
+
+    const mutation = useMutation({
+        mutationFn: async (values: UpdateAuthorSchemaType) => {
+            const response = await axios.patch(`/api/authors/${id}`,values)
+            return response.data
+        },
+        onSuccess: (data) => {
+            toast.success("Author successfully updated"),
+            queryClient.invalidateQueries({
+                queryKey: ['authors']
+            }),
+            router.push('/admin-authors')
+        },
+        onError: (error: Error | AxiosError) => {
+            console.error(error)
+            
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || "Failed to create update Author"
+                toast.error(errorMessage)
+            } else {
+                toast.error("Failed to update Author")
+            }
+        }
+    })
+
+    return mutation
+}
+
+
+export const useGetSingleAuthorQuery = (id:string | string[]) => {
+    return useQuery({
+        queryKey: ['authors', id],
+        queryFn: async () => {
+            const respone = await axios.get(`/api/authors/${id}`)
+            return respone.data
+        }
+    })
+}
+
+export const useDeleteAuthorMutation = () => {
+    const queryClient = useQueryClient()
+    const router = useRouter()
+
+    const mutation = useMutation({
+        mutationFn: async (id: string) => {
+            const response = await axios.delete(`/api/authors/${id}`)
+            return response.data
+        },
+        onSuccess: (data) => {
+            toast.success("Author successfully deleted"),
+            queryClient.invalidateQueries({
+                queryKey: ['authors']
+            }),
+            router.push('/admin-authors')
+        },
+        onError: (error: Error | AxiosError) => {
+            console.error(error)
+            
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || "Failed to delete author"
+                toast.error(errorMessage)
+            } else {
+                toast.error("Failed to delete author")
+            }
+        }
+    })
+
+    return mutation
+}
+
 
 
 
@@ -102,16 +175,15 @@ export const updateSinglePaperMutation = (id:string | string[]) => {
             console.error(error)
             
             if (axios.isAxiosError(error)) {
-                const errorMessage = error.response?.data?.message || "Failed to create update paper"
+                const errorMessage = error.response?.data?.message || "Failed to update paper"
                 toast.error(errorMessage)
             } else {
-                toast.error("Failed to create update paper")
+                toast.error("Failed to update paper")
             }
         }
     })
 
     return mutation
-
 }
 
 export const useDeletePaperMutation = () => {
@@ -124,7 +196,7 @@ export const useDeletePaperMutation = () => {
             return response.data
         },
         onSuccess: (data) => {
-            toast.success("Paper successfully updated"),
+            toast.success("Paper successfully delete"),
             queryClient.invalidateQueries({
                 queryKey: ['papers']
             }),
@@ -134,10 +206,10 @@ export const useDeletePaperMutation = () => {
             console.error(error)
             
             if (axios.isAxiosError(error)) {
-                const errorMessage = error.response?.data?.message || "Failed to create update paper"
+                const errorMessage = error.response?.data?.message || "Failed to delete paper"
                 toast.error(errorMessage)
             } else {
-                toast.error("Failed to create update paper")
+                toast.error("Failed to delete paper")
             }
         }
     })
@@ -165,10 +237,10 @@ export const useCreateNewPaperMutation = () => {
             console.error(error)
             
             if (axios.isAxiosError(error)) {
-                const errorMessage = error.response?.data?.message || "Failed to create new author"
+                const errorMessage = error.response?.data?.message || "Failed to create new paper"
                 toast.error(errorMessage)
             } else {
-                toast.error("Failed to create new author")
+                toast.error("Failed to create new paper")
             }
         }
     })
